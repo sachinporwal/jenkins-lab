@@ -31,7 +31,7 @@ pipeline {
             }
         }
 
-        stage('Switch Traffic') {
+        stage('Switch Traffic to Green') {
             steps {
                 sh '''
                 sudo sed -i 's/8081/8082/g' /etc/nginx/sites-enabled/default
@@ -41,14 +41,34 @@ pipeline {
             }
         }
 
-        stage('Stop Old Version') {
+        stage('Post Switch Verification') {
             steps {
-                sh 'docker rm -f demo || true'
+                sh 'sleep 5'
+                sh 'curl http://localhost'
             }
         }
 
         stage('Promote Green') {
             steps {
                 sh '''
+                docker rm -f demo || true
                 docker rename demo-new demo
-    
+                '''
+            }
+        }
+
+    }
+
+    post {
+        failure {
+            sh '''
+            echo "Deployment failed, rolling back"
+            sudo sed -i 's/8082/8081/g' /etc/nginx/sites-enabled/default
+            sudo nginx -t
+            sudo systemctl reload nginx
+            docker rm -f demo-new || true
+            '''
+        }
+    }
+}
+
