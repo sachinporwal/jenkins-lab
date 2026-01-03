@@ -18,7 +18,7 @@ pipeline {
         stage('Run Container') {
             steps {
                 sh '''
-                  docker rm -f demo-new || true
+                  docker rm -f demo || true
                   docker run -d --name demo -p 8081:80 jenkins-demo-app:${BUILD_NUMBER}
                 '''
             }
