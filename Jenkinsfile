@@ -1,24 +1,33 @@
 pipeline {
+    
     agent any
 
     stages {
-        stage('Clone') {
+        stage('Checkout') {
             steps {
-                echo 'Code cloned from GitHub'
+                checkout scm
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t jenkins-demo .'
+                sh 'docker build -t jenkins-demo-app .'
             }
         }
 
         stage('Run Container') {
             steps {
-                sh 'docker run --rm jenkins-demo'
+                sh '''
+                docker rm -f demo || true
+                docker run -d --name demo -p 8081:80 jenkins-demo-app
+                '''
+            }
+        }
+
+        stage('Verify') {
+            steps {
+                sh 'curl http://localhost:8081'
             }
         }
     }
 }
-
