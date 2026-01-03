@@ -9,9 +9,12 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build Docker Image & PUSH it') {
             steps {
-                sh "docker build -t jenkins-demo-app:${BUILD_NUMBER} ."
+                sh '''
+                  docker build -t labdocker12/jenkins-demo-app:${BUILD_NUMBER} .
+                  docker push labdocker12/jenkins-demo-app:${BUILD_NUMBER}
+                  '''
             }
         }
 
@@ -19,7 +22,7 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f demo-new || true
-                docker run -d --name demo-new -p 8082:80 jenkins-demo-app:${BUILD_NUMBER}
+                docker run -d --name demo-new -p 8082:80 labdocker12/jenkins-demo-app:${BUILD_NUMBER}
                 '''
             }
         }
