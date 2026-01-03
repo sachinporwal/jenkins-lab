@@ -22,6 +22,7 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f demo-new || true
+                docker rm -f demo || true
                 docker run -d --name demo-new -p 8082:80 labdocker12/jenkins-demo-app:${BUILD_NUMBER}
                 '''
             }
