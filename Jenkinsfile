@@ -19,14 +19,14 @@ pipeline {
             steps {
                 sh '''
                   docker rm -f demo || true
-                  docker run -d --name demo -p 8081:80 jenkins-demo-app:${BUILD_NUMBER}
+                  docker run -d --name demo -p 8082:80 jenkins-demo-app:${BUILD_NUMBER}
                 '''
             }
         }
 
         stage('Verify') {
             steps {
-                sh 'curl http://localhost:8081'
+                sh 'curl http://localhost:8082'
             }
         }
     }
