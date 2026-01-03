@@ -2,22 +2,21 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Clone') {
             steps {
-                echo 'Code checked out'
+                echo 'Code cloned from GitHub'
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Build step (nothing to compile for shell app)'
+                sh 'docker build -t jenkins-demo .'
             }
         }
 
-        stage('Run App') {
+        stage('Run Container') {
             steps {
-                sh 'chmod +x app/app.sh'
-                sh './app/app.sh'
+                sh 'docker run --rm jenkins-demo'
             }
         }
     }
