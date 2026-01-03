@@ -51,8 +51,4 @@ pipeline {
             steps {
                 sh '''
                 docker rename demo-new demo
-                '''
-            }
-        }
-    }
-}
+    
