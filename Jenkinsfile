@@ -19,15 +19,15 @@ pipeline {
             }
         }
 
-      #  stage('Start Green') {
-          #  steps {
-               # sh '''
-               # docker rm -f demo-new || true
-                #docker rm -f demo || true
-               # docker run -d --name demo-new -p 8082:80 jenkins-demo-app:${BUILD_NUMBER}
-                #'''
-              # } 
-       # }
+        stage('Start Green') {
+            steps {
+                sh '''
+                docker rm -f demo-new || true
+                docker rm -f demo || true
+                docker run -d --name demo-new -p 8082:80 jenkins-demo-app:${BUILD_NUMBER}
+                '''
+               } 
+        }
 
         stage('Health Check') {
             steps {
