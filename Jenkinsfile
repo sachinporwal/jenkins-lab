@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent {label 'agent-1'}
 
     stages {
 
@@ -9,24 +9,25 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image & PUSH it') {
+        stage('Build Docker Image & PUSH to ECR') {
             steps {
-                sh '''
-                  docker build -t labdocker12/jenkins-demo-app:${BUILD_NUMBER} .
-                  docker push labdocker12/jenkins-demo-app:${BUILD_NUMBER}
+                sh '''	
+                  docker build -t jenkins-demo-app:${BUILD_NUMBER} .
+                  docker tag jenkins-demo-app:${BUILD_NUMBER} 528160042605.dkr.ecr.ap-south-1.amazonaws.com/jenkins-demo-app:${BUILD_NUMBER}
+                  docker push 528160042605.dkr.ecr.ap-south-1.amazonaws.com/jenkins-demo-app:${BUILD_NUMBER}
                   '''
             }
         }
 
-        stage('Start Green') {
-            steps {
-                sh '''
-                docker rm -f demo-new || true
-                docker rm -f demo || true
-                docker run -d --name demo-new -p 8082:80 labdocker12/jenkins-demo-app:${BUILD_NUMBER}
-                '''
-            }
-        }
+      #  stage('Start Green') {
+          #  steps {
+               # sh '''
+               # docker rm -f demo-new || true
+                #docker rm -f demo || true
+               # docker run -d --name demo-new -p 8082:80 jenkins-demo-app:${BUILD_NUMBER}
+                #'''
+              # } 
+       # }
 
         stage('Health Check') {
             steps {
