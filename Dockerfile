@@ -1,9 +1,7 @@
-FROM ubuntu:22.04
+FROM nginx:alpine
 
-RUN apt update && apt install -y curl
+COPY app/index.html /usr/share/nginx/html/index.html
 
-WORKDIR /app
+EXPOSE 80
 
-COPY app/ /app/
-
-CMD ["bash", "app.sh"]
+CMD ["nginx", "-g", "daemon off;"]
