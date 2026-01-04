@@ -19,6 +19,14 @@ pipeline {
             }
         }
 
+        stage('Secrets Test') {
+          steps {
+            withCredentials([string(credentialsId: 'app-secret', variable: 'APP_SECRET')]) {
+            sh 'echo "Secret is $APP_SECRET"'
+            }
+          }
+        }
+
         stage('Start Green') {
             steps {
                 sh '''
