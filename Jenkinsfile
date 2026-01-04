@@ -39,6 +39,16 @@ pipeline {
             }
         }
 
+        stage('Approval for Prod') {
+          when {
+            expression { params.ENV == 'prod' }
+            }
+          steps {
+            input message: "Approve deployment to PROD?", ok: "Deploy"
+            }
+           }
+
+
         stage('Deploy') {
             steps {
                 script {
