@@ -9,7 +9,7 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image & PUSH to ECR') {
+        stage('Build Docker Image & PUSH to Docker Repo') {
             steps {
                 sh '''	
                   docker build -t labdocker12/jenkins-demo-app:${BUILD_NUMBER} .
