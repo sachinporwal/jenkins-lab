@@ -1,15 +1,7 @@
 pipeline {
     agent {label 'agent-1'}
 
-    stages {
-
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        parameters {
+    parameters {
           choice(name: 'ENV', choices: ['dev', 'qa', 'prod'], description: 'Deployment environment')
         }
 
@@ -19,7 +11,17 @@ pipeline {
           PROD_PORT = "8083"
         }
 
-        
+
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+            
 
         stage('Build Docker Image & PUSH to Docker Repo') {
             steps {
