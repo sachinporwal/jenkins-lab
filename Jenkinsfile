@@ -12,9 +12,9 @@ pipeline {
         stage('Build Docker Image & PUSH to ECR') {
             steps {
                 sh '''	
-                  docker build -t jenkins-demo-app:${BUILD_NUMBER} .
-                  docker tag jenkins-demo-app:${BUILD_NUMBER} 528160042605.dkr.ecr.ap-south-1.amazonaws.com/jenkins-demo-app:${BUILD_NUMBER}
-                  docker push 528160042605.dkr.ecr.ap-south-1.amazonaws.com/jenkins-demo-app:${BUILD_NUMBER}
+                  docker build -t labdocker12/jenkins-demo-app:${BUILD_NUMBER} .
+                  
+                  docker push labdocker12/jenkins-demo-app:${BUILD_NUMBER} 
                   '''
             }
         }
@@ -24,7 +24,7 @@ pipeline {
                 sh '''
                 docker rm -f demo-new || true
                 docker rm -f demo || true
-                docker run -d --name demo-new -p 8082:80 jenkins-demo-app:${BUILD_NUMBER}
+                docker run -d --name demo-new -p 8082:80 labdocker12/jenkins-demo-app:${BUILD_NUMBER}
                 '''
                } 
         }
