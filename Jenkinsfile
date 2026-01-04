@@ -9,6 +9,18 @@ pipeline {
             }
         }
 
+        parameters {
+          choice(name: 'ENV', choices: ['dev', 'qa', 'prod'], description: 'Deployment environment')
+        }
+
+        environment {
+          DEV_PORT = "8081"
+          QA_PORT = "8082"
+          PROD_PORT = "8083"
+        }
+
+        
+
         stage('Build Docker Image & PUSH to Docker Repo') {
             steps {
                 sh '''	
@@ -27,15 +39,23 @@ pipeline {
           }
         }
 
-        stage('Start Green') {
-            steps {
-                sh '''
-                docker rm -f demo-new || true
-                docker rm -f demo || true
-                docker run -d --name demo-new -p 8082:80 labdocker12/jenkins-demo-app:${BUILD_NUMBER}
-                '''
-               } 
-        }
+        
+
+        stage('Deploy') {
+          steps {
+            script {
+              def port = ""
+                if (params.ENV == "dev") port = env.DEV_PORT
+                if (params.ENV == "qa") port = env.QA_PORT
+                if (params.ENV == "prod") port = env.PROD_PORT
+
+            sh """
+            docker rm -f demo-${params.ENV} || true
+            docker run -d --name demo-${params.ENV} -p ${port}:80 labdocker12/jenkins-demo-app:${BUILD_NUMBER}
+            """
+             }
+            }
+           }
 
         stage('Health Check') {
             steps {
